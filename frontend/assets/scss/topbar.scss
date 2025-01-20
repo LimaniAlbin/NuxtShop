@@ -1,0 +1,72 @@
+.layout-topbar {
+  position: fixed;
+  height: 4rem;
+  z-index: 997;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 0 2rem;
+  background-color: #18181b;
+  display: flex;
+  align-items: center;
+
+  .layout-topbar-logo-container {
+    width: 20rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .layout-topbar-logo {
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.5rem;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    gap: 0.5rem;
+  }
+
+  .layout-topbar-action {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #242424;
+    }
+
+    &:focus-visible {
+      @include focused();
+    }
+
+    i {
+      font-size: 1.25rem;
+    }
+
+    span {
+      font-size: 1rem;
+      display: none;
+    }
+  }
+
+  .layout-topbar-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .layout-topbar-menu-content {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .layout-config-menu {
+    display: flex;
+    gap: 1rem;
+  }
+}
