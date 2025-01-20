@@ -4,6 +4,11 @@ import Aura from '@primevue/themes/aura';
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: {enabled: true},
+    runtimeConfig: {
+        public: {
+            backendUrl: process.env.BACKEND_URL
+        }
+    },
     css: ['~/assets/css/tailwind.css', 'primeicons/primeicons.css', '~/assets/scss/layout.scss'],
     modules: ['@nuxtjs/tailwindcss', '@primevue/nuxt-module'],
     postcss: {
@@ -12,6 +17,7 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
+
     primevue: {
         options: {
             ripple: true,
@@ -25,5 +31,6 @@ export default defineNuxtConfig({
                 }
             }
         }
-    }
+    },
+
 })

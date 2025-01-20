@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
+const cors = require('cors');
 const connectDB = require("./config/db");
 
 const productRoutes = require('./routes/ProductRoutes');
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 8000;
 
 // Middleware
 app.use(express.json())
+app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // routes
