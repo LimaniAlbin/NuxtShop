@@ -1,9 +1,13 @@
 <template>
-  <products-table />
+  <div class="card">
+    <div class="font-semibold text-xl mb-4">Filtering</div>
+    <app-table />
+  </div>
+
 </template>
 
 <script setup>
-import ProductsTable from "~/components/admin/AdminTable.vue";
+import AppTable from "~/components/admin/AppTable.vue";
 
 definePageMeta({
   layout: 'admin-layout',
