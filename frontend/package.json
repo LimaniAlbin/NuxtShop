@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource/inter": "^5.1.1",
     "@nuxtjs/tailwindcss": "^6.13.1",
+    "@primevue/forms": "^4.2.5",
     "@primevue/themes": "^4.2.5",
     "@tanstack/query-core": "^5.64.2",
     "@tanstack/vue-query": "^5.64.2",

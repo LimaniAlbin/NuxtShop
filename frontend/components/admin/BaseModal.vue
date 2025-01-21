@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model:visible="isVisible" modal :header="title" :style="{ width: '25rem' }" @update:visible="close" dismissable-mask close-on-escape maximizable>
+  <Dialog v-model:visible="isVisible" modal :header="title" :style="{ width: '450px' }" @update:visible="close" dismissable-mask close-on-escape maximizable>
     <template #default>
       <slot />
     </template>
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import {Dialog, Form} from "primevue";
+import {Dialog} from "primevue";
 
 // props
 const props = defineProps({
