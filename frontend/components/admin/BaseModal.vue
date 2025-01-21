@@ -1,6 +1,5 @@
 <template>
   <Dialog v-model:visible="isVisible" modal :header="title" :style="{ width: '25rem' }" @update:visible="close" dismissable-mask close-on-escape maximizable>
-    <Form></Form>
     <template #default>
       <slot />
     </template>
