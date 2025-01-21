@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <create-product v-if="openCreateProductModal" @close="openCreateProductModal = false" />
+  <create-product v-if="openCreateProductModal" @close="openCreateProductModal = false" @refresh="fetchProducts"/>
 
 </template>
 
@@ -17,6 +17,8 @@ import ProductsTable from "~/components/admin/products/ProductsTable.vue";
 import CreateProduct from "~/components/admin/products/CreateProduct.vue";
 import Toolbar from "~/components/admin/Toolbar.vue";
 import {useQuery} from "@tanstack/vue-query";
+import { getAllProducts } from "~/services/admin/ProductService.ts";
+
 
 definePageMeta({
   layout: 'admin-layout',
@@ -25,7 +27,8 @@ definePageMeta({
 const openCreateProductModal = ref(false)
 
 const fetchProducts = async () => {
-  return await $fetch("http://localhost:8080/api/products")
+  const response = await getAllProducts()
+  return response.data
 }
 
 const {data, error, isLoading} = useQuery({

@@ -5,7 +5,7 @@
     </template>
     <template #footer>
       <Button label="Cancel" variant="text" icon="pi pi-times" @click="close"/>
-      <Button label="Save" icon="pi pi-check" />
+      <Button label="Save" icon="pi pi-check" @click="submit"/>
     </template>
   </Dialog>
 </template>
@@ -26,12 +26,16 @@ const props = defineProps({
 })
 
 // emit
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'submit'])
 
 // data
 const isVisible = ref(props.visible);
 
 // functions
+const submit = () => {
+  emit('submit');
+}
+
 const close = () => {
   isVisible.value = false;
   emit('close')
