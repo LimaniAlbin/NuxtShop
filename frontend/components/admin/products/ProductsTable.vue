@@ -1,19 +1,11 @@
 <template>
   <DataTable :value="data" tableStyle="min-width: 50rem">
     <template #header>
-      <div class="flex flex-wrap gap-2 items-center justify-between">
-        <p class="m-0 text-lg">Manage {{ title }}</p>
-        <IconField>
-          <InputIcon>
-            <i class="pi pi-search"/>
-          </InputIcon>
-          <InputText placeholder="Search..."/>
-        </IconField>
-      </div>
+      <table-header title="Products" />
     </template>
     <Column header="Image">
       <template #body="slotProps">
-        <img :src="`${runtimeConfig.public.backendUrl}/uploads/${slotProps?.data?.image}`" :alt="title + 'Image'" />
+        <img :src="`${runtimeConfig.public.backendUrl}/uploads/${slotProps?.data?.image}`" :alt="title + 'Image'" class="w-18 h-14 rounded" />
       </template>
     </Column>
     <Column field="name" header="Name"></Column>
@@ -24,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import {IconField, InputIcon, InputText} from "primevue";
+import TableHeader from "~/components/admin/TableHeader.vue";
 
 const runtimeConfig = useRuntimeConfig();
 
