@@ -3,13 +3,28 @@ const path = require('path');
 const Product = require('../models/Product');
 
 const getProducts = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
     try {
-        const products = await Product.find().sort({ createdAt: -1 });
-        res.status(200).json({ message: 'Product list fetched successfully', products });
+        const products = await Product.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(Number(limit));
+
+        const totalProducts = await Product.countDocuments();
+
+        res.status(200).json({
+            message: 'Product list fetched successfully',
+            products,
+            total: totalProducts,
+            totalPages: Math.ceil(totalProducts / limit),
+            currentPage: Number(page)
+        });
     } catch (error) {
-        res.status(500).json({message: 'Failed to get products', error});
+        res.status(500).json({ message: 'Failed to get products', error });
     }
-}
+};
 
 const getProductById = async (req, res) => {
     const { id } = req.params;
