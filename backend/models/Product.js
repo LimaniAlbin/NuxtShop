@@ -24,6 +24,11 @@ const productSchema = new mongoose.Schema(
         image: {
             type: String,
         },
+        brand: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Brand',
+            required: [true, 'Brand is required'],
+        }
     }, {timestamps: true,}
 );
 
