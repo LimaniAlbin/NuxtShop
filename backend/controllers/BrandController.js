@@ -28,11 +28,11 @@ const getBrandById = async (req, res) => {
 };
 
 const createBrand = async (req, res) => {
-    const { name } = req.body;
+    const { name, description } = req.body;
     const logo = req.file ? req.file.filename : null;
 
     try {
-        const newBrand = await Brand.create({ name, logo });
+        const newBrand = await Brand.create({ name, description, logo });
 
         res.status(201).json({ message: 'Brand created successfully', newBrand });
     } catch (error) {
@@ -42,7 +42,7 @@ const createBrand = async (req, res) => {
 
 const editBrand = async (req, res) => {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, description } = req.body;
     const logo = req.file ? req.file.filename : null;
 
     try {
@@ -58,6 +58,7 @@ const editBrand = async (req, res) => {
 
         // Update fields
         brand.name = name || brand.name;
+        brand.description = description || brand.description;
         if (logo) {
             brand.logo = logo;
         }

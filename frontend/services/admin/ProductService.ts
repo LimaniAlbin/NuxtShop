@@ -31,4 +31,3 @@ export const updateProduct = ({ id, data }: { id: string, data: FormData }) => {
 
 export const deleteProduct = (id: string) => api.delete<void>(`/api/admin/products/${id}`);
 
-export const uploadProductImage = (id: number, file: File) => api.upload<void>(`/api/products/${id}/upload-image`, file);

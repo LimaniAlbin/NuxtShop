@@ -12,7 +12,7 @@ const model = ref([
     label: 'Shop',
     items: [
       { label: 'Products', icon: 'pi pi-shopping-cart', to: '/admin/products' },
-      { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
+      { label: 'Brands', icon: 'pi pi-table', to: '/admin/brands' },
       { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
       { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
       { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
