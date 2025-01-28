@@ -1,8 +1,9 @@
 <template>
-  <base-modal title="Create Product" :visible="showModal" :is-loading="isPending" @submit="onCreateProduct" @close="closeModal">
+  <base-modal title="Edit Product" :visible="showModal" :isLoading="isPending" @submit="onEditProduct" @close="closeModal">
     <Form v-slot="$form"
           :resolver="resolver"
-          @submit="onCreateProduct"
+          :initial-values="product"
+          @submit="onEditProduct"
     >
       <div class="flex flex-col gap-6">
         <div>
@@ -40,7 +41,18 @@
                       @select="onImageSelect($event)"
           >
             <template #empty>
-              <span>Drag and drop files to here to upload.</span>
+              <div>
+                <span>Drag and drop files to here to upload.</span>
+                <!-- Display existing image if available -->
+                <div v-if="product?.imageUrl" class="mt-3">
+                  <img :src="`${runtimeConfig.public.backendUrl}/uploads/${product?.imageUrl}`"
+                       :alt="product?.imageUrl"
+                       style="max-width: 100px;"
+                  />
+                  <p class="mt-2">{{ product.imageUrl }}</p>
+                </div>
+
+              </div>
             </template>
           </FileUpload>
         </div>
@@ -50,12 +62,20 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query';  // Import tanstack query hooks
+import {useMutation, useQueryClient} from '@tanstack/vue-query';
 import BaseModal from "~/components/admin/BaseModal.vue";
-import { InputText, Textarea, InputNumber, FileUpload } from "primevue";
-import { createProduct } from "~/services/admin/ProductService"
+import {InputText, Textarea, InputNumber, FileUpload} from "primevue";
+import {updateProduct, getProductById} from "~/services/admin/ProductService"
 
+const runtimeConfig = useRuntimeConfig();
 const queryClient = useQueryClient()
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  }
+})
 
 // emits
 const emit = defineEmits<{
@@ -75,16 +95,25 @@ const showModal = ref(true)
 
 // functions
 const { mutate, isPending } = useMutation({
-  mutationFn: createProduct,
-  onSuccess: (data) => {
+  mutationFn: updateProduct,
+  onSuccess: (data, isLoading) => {
     queryClient.invalidateQueries(["products"]);
     closeModal();
-    refresh()
+    refresh();
   },
   onError: (error) => {
-    console.error("Error creating product:", error);
+    console.error("Error updating product:", error);
   }
 });
+
+const getProduct = async () => {
+  const response = await getProductById(props?.id);
+  const fetchedProduct = response?.data?.product;
+  product.value = {
+    ...fetchedProduct,
+    imageUrl: fetchedProduct?.image,
+  };
+}
 
 // handle image select
 const onImageSelect = (event: any) => {
@@ -92,17 +121,23 @@ const onImageSelect = (event: any) => {
 }
 
 
-const onCreateProduct = async () => {
+const onEditProduct = async () => {
   const formData = new FormData();
   formData.append("name", product.value.name);
   formData.append("description", product.value.description);
   formData.append("price", product.value.price.toString());
   formData.append("stock", product.value.stock.toString());
+
+  // Append image if selected
   if (selectedImage.value) {
     formData.append("image", selectedImage.value);
+  } else if (product.value.imageUrl) {
+    // Optionally, append the existing image URL if no new image is selected
+    formData.append("image", product.value.imageUrl);
   }
 
-  mutate(formData);
+  // Now pass the correct object to the mutate function
+  mutate({ id: props.id, data: formData });
 }
 
 const refresh = () => {
@@ -113,4 +148,8 @@ const closeModal = () => {
   showModal.value = false
   emit('close')
 }
+
+onMounted(() => {
+  getProduct()
+})
 </script>

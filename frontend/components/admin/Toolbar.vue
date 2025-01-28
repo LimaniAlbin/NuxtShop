@@ -9,10 +9,12 @@
   </Toolbar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Toolbar from 'primevue/toolbar';
 
-const emit = defineEmits(['open-modal'])
+const emit = defineEmits<{
+  (e: 'open-modal'): void;
+}>();
 
 const openModal = () => {
   emit('open-modal');

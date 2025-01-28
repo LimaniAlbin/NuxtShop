@@ -4,6 +4,11 @@ import Aura from '@primevue/themes/aura';
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: {enabled: true},
+    app: {
+        head: {
+            title: 'Nuxt Shop'
+        }
+    },
     runtimeConfig: {
         public: {
             backendUrl: process.env.BACKEND_URL

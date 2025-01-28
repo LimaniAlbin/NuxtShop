@@ -9,26 +9,26 @@ export interface Product {
 }
 
 // Define the service methods individually
-export const getAllProducts = (page: number, pageSize: number) => {
+export const getAllProducts = (page: number, pageSize: number = 8) => {
     return api.get<Product[]>(`/api/products?page=${page}&limit=${pageSize}`);
 }
 
-export const getProductById = (id: number) => api.getById<Product>('/api/products', id);
+export const getProductById = (id: string) => api.getById<Product>('/api/products', id);
 
 export const createProduct = (payload: FormData) => {
     return api.post<Product>('/api/admin/products', payload);
 };
 
-export const updateProduct = (id: number, payload: Partial<Product>) => {
-    if (!payload) {
+export const updateProduct = ({ id, data }: { id: string, data: FormData }) => {
+    if (!data) {
         return {
             success: false,
             message: 'No updates provided.',
         };
     }
-    return api.put<Product>(`/api/admin/products/${id}`, payload);
+    return api.put<Product>(`/api/admin/products/${id}`, data);
 };
 
-export const deleteProduct = (id: number) => api.delete<void>(`/api/admin/products/${id}`);
+export const deleteProduct = (id: string) => api.delete<void>(`/api/admin/products/${id}`);
 
 export const uploadProductImage = (id: number, file: File) => api.upload<void>(`/api/products/${id}/upload-image`, file);

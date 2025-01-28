@@ -13,11 +13,17 @@
     <Column field="description" header="Description"></Column>
     <Column field="price" header="Price"></Column>
     <Column field="stock" header="Stock"></Column>
+    <Column :exportable="false" style="width: 10rem">
+      <template #body="slotProps">
+        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click.prevent="openEditModal(slotProps.data._id)" />
+        <Button icon="pi pi-trash" outlined rounded severity="danger" @click.prevent="openDeleteModal(slotProps.data._id)" />
+      </template>
+    </Column>
   </DataTable>
-  <Paginator :rows="pageSize"
-             :first="(currentPage -1) * pageSize"
+  <Paginator :rows="selectedPageSize"
+             :first="(currentPage -1) * selectedPageSize"
              :totalRecords="totalProducts"
-             :rowsPerPageOptions="[ 10, 20, 30]"
+             :rowsPerPageOptions="[ 8, 10, 20, 30]"
              @page="onPageChange"
   />
 </template>
@@ -50,7 +56,7 @@ const props = defineProps({
   pageSize: {
     type: Number,
     required: true,
-    default: 10
+    default: 8
   },
   currentPage: {
     type: Number,
@@ -61,15 +67,25 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'paginate', page: number, pageSize: number): void;
+  (e: 'open-edit', id: string): void;
+  (e: 'open-delete', id: string): void;
 }>();
 
 const selectedPage = ref(1)
-const selectedPageSize = ref(10)
+const selectedPageSize = ref(8)
 
 const onPageChange = (event: any) => {
   selectedPage.value = event?.page + 1;
   selectedPageSize.value = event?.rows;
-  console.log(selectedPageSize.value)
   emit('paginate', selectedPage.value, selectedPageSize.value)
 }
+
+const openEditModal = (id: string) => {
+  emit('open-edit', id)
+}
+
+const openDeleteModal = (id: string) => {
+  emit('open-delete', id)
+}
+
 </script>

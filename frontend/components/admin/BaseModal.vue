@@ -5,7 +5,8 @@
     </template>
     <template #footer>
       <Button label="Cancel" variant="text" icon="pi pi-times" @click="close"/>
-      <Button label="Save" icon="pi pi-check" @click="submit"/>
+      <Button v-if="!isLoading" label="Save" icon="pi pi-check" @click="submit"/>
+      <Button v-else label="Save" icon="pi pi-spin pi-spinner" @click="submit"/>
     </template>
   </Dialog>
 </template>
@@ -22,6 +23,9 @@ const props = defineProps({
   title: {
     type: String,
     required: true
+  },
+  isLoading: {
+    type: Boolean
   }
 })
 
@@ -33,6 +37,7 @@ const isVisible = ref(props.visible);
 
 // functions
 const submit = () => {
+  console.log(props.isLoading);
   emit('submit');
 }
 
