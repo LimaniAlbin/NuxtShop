@@ -126,7 +126,6 @@ const getProduct = async () => {
 
 const fetchBrands = async () => {
   const response = await getAllBrands()
-  console.log(response.data)
   return response.data
 }
 

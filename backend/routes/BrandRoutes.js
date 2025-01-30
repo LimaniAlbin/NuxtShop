@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get('/brands', getBrands);
 router.get('/brands/:id', getBrandById)
-router.post('/admin/brands', upload.single('image'), createBrand);
-router.put('/admin/brands/:id', upload.single('image'), editBrand);
+router.post('/admin/brands', upload.single('logo'), createBrand);
+router.put('/admin/brands/:id', upload.single('logo'), editBrand);
 router.delete('/admin/brands/:id', deleteBrand);
 
 module.exports = router;

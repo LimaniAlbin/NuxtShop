@@ -34,4 +34,17 @@ const props = defineProps({
     required: true
   }
 })
+
+const emit = defineEmits<{
+  (e: 'open-edit', id: string): void;
+  (e: 'open-delete', id: string): void;
+}>();
+
+const openEditModal = (id: string) => {
+  emit('open-edit', id)
+}
+
+const openDeleteModal = (id: string) => {
+  emit('open-delete', id)
+}
 </script>
