@@ -9,8 +9,8 @@ export interface Product {
 }
 
 // Define the service methods individually
-export const getAllBrands = (page: number, pageSize: number = 8) => {
-    return api.get<Product[]>(`/api/brands?page=${page}&limit=${pageSize}`);
+export const getAllBrands = () => {
+    return api.get<Product[]>(`/api/brands`);
 }
 
 export const getBrandById = (id: string) => api.getById<Product>('/api/brands', id);

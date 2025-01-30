@@ -14,6 +14,10 @@
           <Textarea v-model="product.description" id="description" fluid rows="3" cols="20"/>
         </div>
         <div>
+          <label for="brand" class="block font-bold mb-3">Brand</label>
+          <Select v-model="selectedBrand" :options="data?.brands" option-label="name" id="brand" fluid/>
+        </div>
+        <div>
           <label for="price" class="block font-bold mb-3">Price</label>
           <InputNumber v-model="product.price" input-id="price" mode="currency" currency="EUR" locale="de-DE" fluid/>
         </div>
@@ -50,10 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query';  // Import tanstack query hooks
+import {useMutation, useQuery, useQueryClient} from '@tanstack/vue-query';  // Import tanstack query hooks
 import BaseModal from "~/components/admin/BaseModal.vue";
-import { InputText, Textarea, InputNumber, FileUpload } from "primevue";
+import { InputText, Textarea, InputNumber, FileUpload, Select } from "primevue";
 import { createProduct } from "~/services/admin/ProductService"
+import { getAllBrands } from "~/services/admin/BrandService";
 
 const queryClient = useQueryClient()
 
@@ -70,8 +75,21 @@ const product = ref({
   price: 0,
   stock: 0,
 })
+const selectedBrand = ref({})
+const brands = ref([])
 const selectedImage = ref<File>()
 const showModal = ref(true)
+
+const fetchBrands = async () => {
+  const response = await getAllBrands(_, 8)
+  return response.data
+}
+
+const {data, error, isLoading} = useQuery({
+  queryKey: ["brands"],
+  queryFn: () => fetchBrands(),
+  keepPreviousData: true,
+});
 
 // functions
 const { mutate, isPending } = useMutation({
@@ -91,12 +109,12 @@ const onImageSelect = (event: any) => {
   selectedImage.value = event.files[0];
 }
 
-
 const onCreateProduct = async () => {
   const formData = new FormData();
   formData.append("name", product.value.name);
   formData.append("description", product.value.description);
   formData.append("price", product.value.price.toString());
+  formData.append('brand', selectedBrand.value._id)
   formData.append("stock", product.value.stock.toString());
   if (selectedImage.value) {
     formData.append("image", selectedImage.value);

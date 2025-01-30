@@ -15,6 +15,10 @@
           <Textarea v-model="product.description" id="description" fluid rows="3" cols="20"/>
         </div>
         <div>
+          <label for="brand" class="block font-bold mb-3">Brand</label>
+          <Select v-model="selectedBrand" :options="brands?.brands" option-label="name" id="brand" fluid/>
+        </div>
+        <div>
           <label for="price" class="block font-bold mb-3">Price</label>
           <InputNumber v-model="product.price" input-id="price" mode="currency" currency="EUR" locale="de-DE" fluid/>
         </div>
@@ -62,10 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import {useMutation, useQueryClient} from '@tanstack/vue-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/vue-query';
 import BaseModal from "~/components/admin/BaseModal.vue";
-import {InputText, Textarea, InputNumber, FileUpload} from "primevue";
+import {InputText, Textarea, InputNumber, FileUpload, Select} from "primevue";
 import {updateProduct, getProductById} from "~/services/admin/ProductService"
+import {getAllBrands} from "~/services/admin/BrandService";
 
 const runtimeConfig = useRuntimeConfig();
 const queryClient = useQueryClient()
@@ -90,6 +95,7 @@ const product = ref({
   price: 0,
   stock: 0,
 })
+const selectedBrand = ref({})
 const selectedImage = ref<File>()
 const showModal = ref(true)
 
@@ -112,8 +118,23 @@ const getProduct = async () => {
   product.value = {
     ...fetchedProduct,
     imageUrl: fetchedProduct?.image,
+    brand: fetchedProduct?.brand
   };
+
+  selectedBrand.value = brands.value?.brands?.find(b => b.id === fetchedProduct?.brand?.id) || null;
 }
+
+const fetchBrands = async () => {
+  const response = await getAllBrands()
+  console.log(response.data)
+  return response.data
+}
+
+const {data: brands, error, isLoading} = useQuery({
+  queryKey: ["brands"],
+  queryFn: () => fetchBrands(),
+  keepPreviousData: true,
+});
 
 // handle image select
 const onImageSelect = (event: any) => {
@@ -126,6 +147,7 @@ const onEditProduct = async () => {
   formData.append("name", product.value.name);
   formData.append("description", product.value.description);
   formData.append("price", product.value.price.toString());
+  formData.append('brand', selectedBrand.value._id)
   formData.append("stock", product.value.stock.toString());
 
   // Append image if selected
@@ -151,5 +173,6 @@ const closeModal = () => {
 
 onMounted(() => {
   getProduct()
+  fetchBrands()
 })
 </script>

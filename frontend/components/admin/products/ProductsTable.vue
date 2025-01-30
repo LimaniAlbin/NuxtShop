@@ -11,6 +11,11 @@
     </Column>
     <Column field="name" header="Name"></Column>
     <Column field="description" header="Description"></Column>
+    <Column  header="Brand">
+      <template #body="slotProps">
+        {{ slotProps?.data?.brand?.name }}
+      </template>
+    </Column>
     <Column field="price" header="Price"></Column>
     <Column field="stock" header="Stock"></Column>
     <Column :exportable="false" style="width: 10rem">
@@ -77,6 +82,7 @@ const selectedPageSize = ref(8)
 const onPageChange = (event: any) => {
   selectedPage.value = event?.page + 1;
   selectedPageSize.value = event?.rows;
+  console.log(selectedPageSize.value);
   emit('paginate', selectedPage.value, selectedPageSize.value)
 }
 
