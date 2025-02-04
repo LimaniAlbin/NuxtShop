@@ -1,8 +1,6 @@
 <template>
   <base-modal title="Edit Product" :visible="showModal" :isLoading="isPending" @submit="onEditProduct" @close="closeModal">
     <Form v-slot="$form"
-          :resolver="resolver"
-          :initial-values="product"
           @submit="onEditProduct"
     >
       <div class="flex flex-col gap-6">

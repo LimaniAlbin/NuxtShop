@@ -37,7 +37,6 @@ const isVisible = ref(props.visible);
 
 // functions
 const submit = () => {
-  console.log(props.isLoading);
   emit('submit');
 }
 

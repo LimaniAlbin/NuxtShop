@@ -20,7 +20,8 @@
     "primeicons": "^7.0.0",
     "primevue": "^4.2.5",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.2.5",

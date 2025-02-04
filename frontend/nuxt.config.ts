@@ -15,7 +15,7 @@ export default defineNuxtConfig({
         }
     },
     css: ['~/assets/css/tailwind.css', 'primeicons/primeicons.css', '~/assets/scss/layout.scss'],
-    modules: ['@nuxtjs/tailwindcss', '@primevue/nuxt-module'],
+    modules: ['@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@formkit/nuxt'],
     postcss: {
         plugins: {
             tailwindcss: {},
