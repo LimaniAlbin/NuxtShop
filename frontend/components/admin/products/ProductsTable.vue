@@ -11,7 +11,7 @@
     </Column>
     <Column field="name" header="Name"></Column>
     <Column field="description" header="Description"></Column>
-    <Column  header="Brand">
+    <Column header="Brand">
       <template #body="slotProps">
         {{ slotProps?.data?.brand?.name }}
       </template>
@@ -20,8 +20,9 @@
     <Column field="stock" header="Stock"></Column>
     <Column :exportable="false" style="width: 10rem">
       <template #body="slotProps">
-        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click.prevent="openEditModal(slotProps.data._id)" />
-        <Button icon="pi pi-trash" outlined rounded severity="danger" @click.prevent="openDeleteModal(slotProps.data._id)" />
+        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click.prevent="openEditModal(slotProps.data._id)"/>
+        <Button icon="pi pi-trash" outlined rounded severity="danger"
+                @click.prevent="openDeleteModal(slotProps.data._id)"/>
       </template>
     </Column>
   </DataTable>

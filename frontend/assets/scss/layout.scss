@@ -1,7 +1,7 @@
 @use 'mixins' as *;
-@import "core";
-@import 'sidebar';
-@import 'topbar';
-@import 'responsive';
-@import 'main';
-@import 'typography';
+@use "core";
+@use 'sidebar';
+@use 'topbar';
+@use 'responsive';
+@use 'main';
+@use 'typography';

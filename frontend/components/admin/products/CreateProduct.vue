@@ -112,8 +112,9 @@ import { InputText, Textarea, InputNumber, FileUpload, Select } from "primevue";
 import { createProduct } from "~/services/admin/ProductService";
 import { getAllBrands } from "~/services/admin/BrandService";
 import { productSchema } from "~/validators/productValidator";
+import { validateField as globalValidateField } from "~/utils/validateField";
+import { validateFormData } from "~/utils/validateForm";
 
-// For communicating with tanstack query
 const queryClient = useQueryClient();
 
 // emits
@@ -153,6 +154,7 @@ const { data, error, isLoading } = useQuery({
   keepPreviousData: true,
 });
 
+// Local wrapper for field validation that uses the global function
 const validateField = (field: "name" | "description" | "price" | "stock" | "brand" | "image") => {
   let value: any;
   if (field === "brand") {
@@ -162,16 +164,8 @@ const validateField = (field: "name" | "description" | "price" | "stock" | "bran
   } else {
     value = product.value[field];
   }
-  const fieldSchema = productSchema.pick({ [field]: true });
-  const result = fieldSchema.safeParse({ [field]: value });
-
-  if (!result.success) {
-    errors.value[field] = result.error.flatten().fieldErrors[field]?.join(", ") || "";
-  } else {
-    errors.value[field] = "";
-  }
+  errors.value[field] = globalValidateField(field, value, productSchema);
 };
-
 
 const { mutate, isPending } = useMutation({
   mutationFn: createProduct,
@@ -190,7 +184,6 @@ const onImageSelect = (event: any) => {
   validateField("image");
 };
 
-
 const validateForm = () => {
   const formData = {
     name: product.value.name,
@@ -201,23 +194,9 @@ const validateForm = () => {
     image: selectedImage.value || undefined,
   };
 
-  const result = productSchema.safeParse(formData);
-
-  if (!result.success) {
-    const fieldErrors = result.error.flatten().fieldErrors;
-    errors.value = {
-      name: fieldErrors.name ? fieldErrors.name.join(", ") : "",
-      description: fieldErrors.description ? fieldErrors.description.join(", ") : "",
-      price: fieldErrors.price ? fieldErrors.price.join(", ") : "",
-      stock: fieldErrors.stock ? fieldErrors.stock.join(", ") : "",
-      brand: fieldErrors.brand ? fieldErrors.brand.join(", ") : "",
-      image: fieldErrors.image ? fieldErrors.image.join(", ") : "",
-    };
-    return false;
-  } else {
-    errors.value = {};
-    return true;
-  }
+  const { valid, errors: formErrors } = validateFormData(formData, productSchema);
+  errors.value = formErrors;
+  return valid;
 };
 
 const onCreateProduct = async () => {
@@ -247,3 +226,4 @@ const closeModal = () => {
   emit("close");
 };
 </script>
+

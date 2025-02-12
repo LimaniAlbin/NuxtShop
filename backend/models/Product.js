@@ -7,9 +7,17 @@ const productSchema = new mongoose.Schema(
             required: [true, 'Product name is required'],
             trim: true,
         },
+        slug: {
+            type: String,
+            required: true,
+        },
         description: {
             type: String,
             required: [true, 'Product description is required'],
+        },
+        shortDescription: {
+            type: String,
+            required: [true, 'Product short description is required'],
         },
         price: {
             type: Number,
@@ -28,7 +36,7 @@ const productSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Brand',
             required: [true, 'Brand is required'],
-        }
+        },
     }, {timestamps: true,}
 );
 

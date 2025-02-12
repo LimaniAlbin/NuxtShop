@@ -22,7 +22,6 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
-
     primevue: {
         options: {
             ripple: true,
@@ -37,5 +36,4 @@ export default defineNuxtConfig({
             }
         }
     },
-
 })
