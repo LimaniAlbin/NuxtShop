@@ -1,10 +1,10 @@
 <template>
-  <base-modal title="Delete Brand" :visible="showModal" :isLoading="isPending" @submit="onDeleteBrand"
+  <base-modal title="Delete Category" :visible="showModal" :isLoading="isPending" @submit="onDeleteCategory"
               @close="closeModal">
-    <form @submit="onDeleteBrand">
+    <form @submit="onDeleteCategory">
       <div class="flex items-center gap-4">
         <i class="pi pi-exclamation-triangle !text-3xl"/>
-        <span>Are you sure you want to delete <b>{{ brandName }}</b>?</span>
+        <span>Are you sure you want to delete <b>{{ categoryName }}</b>?</span>
       </div>
     </form>
   </base-modal>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import BaseModal from "~/components/admin/BaseModal.vue";
 import {useMutation, useQueryClient} from "@tanstack/vue-query";
-import {deleteBrand, getBrandById} from "~/services/admin/BrandService";
+import {deleteCategory, getCategoryById} from "~/services/admin/CategoryService";
 const queryClient = useQueryClient()
 
 const props = defineProps({
@@ -27,13 +27,13 @@ const emit = defineEmits<{
   (e: 'refresh'): void;
 }>();
 
-const brandName = ref('')
+const categoryName = ref('')
 const showModal = ref(true)
 
 const {mutate, isPending} = useMutation({
-  mutationFn: deleteBrand,
+  mutationFn: deleteCategory,
   onSuccess: (data, isLoading) => {
-    queryClient.invalidateQueries(["brands"]);
+    queryClient.invalidateQueries(["categories"]);
     closeModal();
     refresh();
   },
@@ -42,13 +42,13 @@ const {mutate, isPending} = useMutation({
   }
 });
 
-const getBrand = async () => {
-  const response = await getBrandById(props?.id);
-  const fetchedBrand = response?.data?.brand;
-  brandName.value = fetchedBrand?.name;
+const getCategory = async () => {
+  const response = await getCategoryById(props?.id);
+  const fetchedCategory = response?.data?.category;
+  categoryName.value = fetchedCategory?.name;
 }
 
-const onDeleteBrand = async () => {
+const onDeleteCategory = async () => {
   mutate(props.id)
 }
 
@@ -62,6 +62,6 @@ const closeModal = () => {
 }
 
 onMounted(() => {
-  getBrand()
+  getCategory()
 })
 </script>

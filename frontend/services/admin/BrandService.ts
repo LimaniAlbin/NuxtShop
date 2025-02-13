@@ -1,22 +1,20 @@
 import { api } from '~/utils/apiHandler';
 
-export interface Product {
+export interface Brand {
     name: string;
     description: string;
-    price: number;
-    stock: number;
-    image: string;
+    logo: string;
 }
 
 // Define the service methods individually
 export const getAllBrands = () => {
-    return api.get<Product[]>(`/api/brands`);
+    return api.get<Brand[]>(`/api/brands`);
 }
 
-export const getBrandById = (id: string) => api.getById<Product>('/api/brands', id);
+export const getBrandById = (id: string) => api.getById<Brand>('/api/brands', id);
 
 export const createBrand = (payload: FormData) => {
-    return api.post<Product>('/api/admin/brands', payload);
+    return api.post<Brand>('/api/admin/brands', payload);
 };
 
 export const updateBrand = ({ id, data }: { id: string, data: FormData }) => {

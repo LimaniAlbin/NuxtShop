@@ -1,17 +1,12 @@
 <template>
-  <base-modal title="Edit Product" :visible="showModal" :isLoading="isPending" @submit="onDeleteProduct"
+  <base-modal title="Delete Product" :visible="showModal" :isLoading="isPending" @submit="onDeleteProduct"
               @close="closeModal">
-    <Form v-slot="$form"
-          :resolver="resolver"
-          @submit="onDeleteProduct"
-    >
+    <form @submit="onDeleteProduct">
       <div class="flex items-center gap-4">
         <i class="pi pi-exclamation-triangle !text-3xl"/>
-        <span>Are you sure you want to delete <b>{{ productName }}</b
-        >?</span
-        >
+        <span>Are you sure you want to delete <b>{{ productName }}</b>?</span>
       </div>
-    </Form>
+    </form>
   </base-modal>
 </template>
 <script setup lang="ts">
