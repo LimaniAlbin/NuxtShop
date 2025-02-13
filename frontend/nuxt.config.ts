@@ -15,7 +15,7 @@ export default defineNuxtConfig({
         }
     },
     css: ['~/assets/css/tailwind.css', 'primeicons/primeicons.css', '~/assets/scss/layout.scss'],
-    modules: ['@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@formkit/nuxt'],
+    modules: ['@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@pinia/nuxt'],
     postcss: {
         plugins: {
             tailwindcss: {},
@@ -34,6 +34,6 @@ export default defineNuxtConfig({
                     cssLayer: false
                 }
             }
-        }
-    },
+        },
+    }
 })

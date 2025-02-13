@@ -50,6 +50,26 @@
           </Message>
         </div>
         <div>
+          <label for="shortDescription" class="block font-bold mb-3">Short Description</label>
+          <Textarea
+              v-model="product.shortDescription"
+              id="shortDescription"
+              fluid
+              rows="3"
+              cols="20"
+              :invalid="!!errors.shortDescription"
+              @value-change="validateField('shortDescription')"
+          />
+          <Message
+              v-if="errors.shortDescription"
+              severity="error"
+              size="small"
+              variant="simple"
+          >
+            {{ errors.shortDescription }}
+          </Message>
+        </div>
+        <div>
           <label for="brand" class="block font-bold mb-3">Brand</label>
           <Select
               v-model="selectedBrand"
@@ -187,6 +207,7 @@ const emit = defineEmits<{
 const product = ref({
   name: '',
   description: '',
+  shortDescription: '',
   price: 0,
   stock: 0,
   imageUrl: '',
@@ -200,6 +221,7 @@ const dataLoaded = ref(false);
 const errors = ref<Record<string, string | null>>({
   name: null,
   description: null,
+  shortDescription: null,
   price: null,
   stock: null,
   brand: null,
@@ -207,7 +229,7 @@ const errors = ref<Record<string, string | null>>({
 });
 
 // Local field validation wrapper using the global validator
-const validateField = (field: 'name' | 'description' | 'price' | 'stock' | 'brand' | 'image') => {
+const validateField = (field: 'name' | 'description'| 'shortDescription' | 'price' | 'stock' | 'brand' | 'image') => {
   let value: any;
   if (field === 'brand') {
     value = selectedBrand.value?._id || '';
@@ -224,6 +246,7 @@ const validateForm = () => {
   const formData = {
     name: product.value.name,
     description: product.value.description,
+    shortDescription: product.value.shortDescription,
     price: product.value.price,
     stock: product.value.stock,
     brand: selectedBrand.value?._id || "",
@@ -288,6 +311,7 @@ const onEditProduct = async () => {
   const formData = new FormData();
   formData.append('name', product.value.name);
   formData.append('description', product.value.description);
+  formData.append('shortDescription', product.value.shortDescription);
   formData.append('price', product.value.price.toString());
   formData.append('brand', selectedBrand.value._id);
   formData.append('stock', product.value.stock.toString());
