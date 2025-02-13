@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 
 const productRoutes = require('./routes/ProductRoutes');
 const brandRoutes = require('./routes/BrandRoutes');
+const categoryRoutes = require('./routes/CategoryRoutes');
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // routes
 app.use('/api/', productRoutes);
 app.use('/api/', brandRoutes);
+app.use('/api/', categoryRoutes);
 
 connectDB()
     .then(() => {
