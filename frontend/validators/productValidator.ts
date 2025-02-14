@@ -7,6 +7,7 @@ export const productSchema = z.object({
     price: z.coerce.number().min(1, { message: 'Price must be greater than 0' }),
     stock: z.coerce.number().min(1, { message: 'Stock quantity must be greater than 0' }),
     brand: z.string().min(1, { message: 'Brand is required' }),
+    category: z.string().min(1, { message: 'Category is required' }),
     image: z.instanceof(File, { message: 'Image is required' })
 });
 

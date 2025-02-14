@@ -10,10 +10,15 @@
       </template>
     </Column>
     <Column field="name" header="Name"></Column>
-    <Column field="description" header="Description"></Column>
+    <Column field="shortDescription" header="Description"></Column>
     <Column header="Brand">
       <template #body="slotProps">
         {{ slotProps?.data?.brand?.name }}
+      </template>
+    </Column>
+    <Column header="Category">
+      <template #body="slotProps">
+        {{ slotProps?.data?.category?.name }}
       </template>
     </Column>
     <Column field="price" header="Price"></Column>
@@ -71,6 +76,8 @@ const props = defineProps({
   }
 })
 
+console.log(props.data)
+
 const emit = defineEmits<{
   (e: 'paginate', page: number, pageSize: number): void;
   (e: 'open-edit', id: string): void;
@@ -83,7 +90,6 @@ const selectedPageSize = ref(8)
 const onPageChange = (event: any) => {
   selectedPage.value = event?.page + 1;
   selectedPageSize.value = event?.rows;
-  console.log(selectedPageSize.value);
   emit('paginate', selectedPage.value, selectedPageSize.value)
 }
 

@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const Product = require('../models/Product');
 const Brand = require('../models/Brand');
+const Category = require('../models/Category');
 const slugify = require('slugify');
+
 
 const getProducts = async (req, res) => {
     const { page = 1, limit = 8 } = req.query;
@@ -13,7 +15,7 @@ const getProducts = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(Number(limit))
-            .populate('brand');
+            .populate(['brand', 'category']);
 
         const totalProducts = await Product.countDocuments();
 
@@ -33,7 +35,7 @@ const getProductById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const product = await Product.findById(id).populate('brand');
+        const product = await Product.findById(id).populate(['brand', 'category']);
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -46,13 +48,19 @@ const getProductById = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-    const { name, description, shortDescription, price, stock, brand } = req.body;
+    const { name, description, shortDescription, price, stock, brand, category } = req.body;
     const image = req.file ? req.file.filename : null;
 
     try {
         const brandExists = await Brand.findById(brand);
         if (!brandExists) {
             return res.status(400).json({ message: 'Brand does not exist' });
+        }
+
+        const categoryExists = await Category.findById(category)
+
+        if (!categoryExists) {
+            return res.status(400).json({ message: 'Category does not exist' });
         }
 
         const slug = await generateUniqueSlug(name);
@@ -65,7 +73,8 @@ const createProduct = async (req, res) => {
             price,
             stock,
             image,
-            brand
+            brand,
+            category
         });
 
         res.status(201).json({ message: 'Product created successfully', newProduct });
@@ -76,7 +85,7 @@ const createProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
     const { id } = req.params;
-    const { name, description, shortDescription, price, stock, brand } = req.body;
+    const { name, description, shortDescription, price, stock, brand, category } = req.body;
     const image = req.file ? req.file.filename : null;
 
     try {
@@ -92,6 +101,14 @@ const editProduct = async (req, res) => {
                 return res.status(400).json({ message: 'Brand does not exist' });
             }
             product.brand = brand;
+        }
+
+        if (category) {
+            const categoryExists = await Category.findById(category);
+            if (!categoryExists) {
+                return res.status(400).json({ message: 'Category does not exist' });
+            }
+            product.category = category;
         }
 
         if (product.image && image && product.image !== image) {

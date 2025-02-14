@@ -46,19 +46,36 @@
           />
           <Message v-if="errors.shortDescription" severity="error" size="small" variant="simple">{{ errors.shortDescription }}</Message>
         </div>
-        <div>
-          <label for="brand" class="block font-bold mb-3">Brand</label>
-          <Select
-              v-model="selectedBrand"
-              :options="data?.brands"
-              option-label="name"
-              id="brand"
-              fluid
-              :invalid="!!errors.brand"
-              @change="validateField('brand')"
-          />
-          <Message v-if="errors.brand" severity="error" size="small" variant="simple">{{ errors.brand }}</Message>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label for="brand" class="block font-bold mb-3">Brand</label>
+            <Select
+                v-model="selectedBrand"
+                :options="brands?.brands"
+                option-label="name"
+                id="brand"
+                fluid
+                :invalid="!!errors.brand"
+                @change="validateField('brand')"
+            />
+            <Message v-if="errors.brand" severity="error" size="small" variant="simple">{{ errors.brand }}</Message>
+          </div>
+
+          <div class="flex-1">
+            <label for="category" class="block font-bold mb-3">Category</label>
+            <Select
+                v-model="selectedCategory"
+                :options="categories?.categories"
+                option-label="name"
+                id="category"
+                fluid
+                :invalid="!!errors.category"
+                @change="validateField('category')"
+            />
+            <Message v-if="errors.category" severity="error" size="small" variant="simple">{{ errors.category }}</Message>
+          </div>
         </div>
+
         <div>
           <label for="price" class="block font-bold mb-3">Price</label>
           <InputNumber
@@ -127,6 +144,7 @@ import { getAllBrands } from "~/services/admin/BrandService";
 import { productSchema } from "~/validators/productValidator";
 import { validateField as globalValidateField } from "~/utils/validateField";
 import { validateFormData } from "~/utils/validateForm";
+import {getAllCategories} from "~/services/admin/CategoryService";
 
 const queryClient = useQueryClient();
 
@@ -145,6 +163,7 @@ const product = ref({
   stock: 0,
 });
 const selectedBrand = ref<any>({});
+const selectedCategory = ref<any>({});
 const selectedImage = ref<File | null>(null);
 const showModal = ref(true);
 
@@ -155,6 +174,7 @@ const errors = ref<Record<string, string | null>>({
   price: null,
   stock: null,
   brand: null,
+  category: null,
   image: null,
 });
 
@@ -163,17 +183,30 @@ const fetchBrands = async () => {
   return response.data;
 };
 
-const { data, error, isLoading } = useQuery({
+const fetchCategories = async () => {
+  const response = await getAllCategories();
+  return response.data;
+}
+
+const { data: brands } = useQuery({
   queryKey: ["brands"],
   queryFn: fetchBrands,
   keepPreviousData: true,
 });
 
+const { data: categories } = useQuery({
+  queryKey: ["categories"],
+  queryFn: fetchCategories,
+  keepPreviousData: true,
+});
+
 // Local wrapper for field validation that uses the global function
-const validateField = (field: "name" | "description" | "shortDescription" | "price" | "stock" | "brand" | "image") => {
+const validateField = (field: "name" | "description" | "shortDescription" | "price" | "stock" | "brand" | "category" | "image") => {
   let value: any;
   if (field === "brand") {
     value = selectedBrand.value?._id || "";
+  } else if (field === "category") {
+    value = selectedCategory.value?._id || "";
   } else if (field === "image") {
     value = selectedImage.value;
   } else {
@@ -207,6 +240,7 @@ const validateForm = () => {
     price: product.value.price,
     stock: product.value.stock,
     brand: selectedBrand.value?._id || "",
+    category: selectedCategory.value?._id || "",
     image: selectedImage.value || undefined,
   };
 
@@ -226,6 +260,7 @@ const onCreateProduct = async () => {
   formData.append("shortDescription", product.value.shortDescription);
   formData.append("price", product.value.price.toString());
   formData.append("brand", selectedBrand.value._id);
+  formData.append("category", selectedCategory.value._id);
   formData.append("stock", product.value.stock.toString());
   if (selectedImage.value) {
     formData.append("image", selectedImage.value);
