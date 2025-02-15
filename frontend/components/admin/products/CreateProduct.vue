@@ -22,12 +22,11 @@
         </div>
         <div>
           <label for="description" class="block font-bold mb-3">Description</label>
-          <Textarea
+          <Editor
               v-model="product.description"
               id="description"
               fluid
-              rows="3"
-              cols="20"
+              editorStyle="height: 100px"
               :invalid="!!errors.description"
               @value-change="validateField('description')"
           />
@@ -139,6 +138,7 @@ import { ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import BaseModal from "~/components/admin/BaseModal.vue";
 import { InputText, Textarea, InputNumber, FileUpload, Select } from "primevue";
+import Editor from 'primevue/editor';
 import { createProduct } from "~/services/admin/ProductService";
 import { getAllBrands } from "~/services/admin/BrandService";
 import { productSchema } from "~/validators/productValidator";
