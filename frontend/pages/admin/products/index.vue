@@ -1,7 +1,9 @@
 <template>
   <div class="card">
     <toolbar @open-modal="showCreateModal"/>
-    <div v-if="isPending">Loading...</div>
+    <div v-if="isPending">
+      <LoadingSpinner />
+    </div>
     <div v-else-if="error">Error: {{ error?.message }}</div>
     <div v-else>
       <products-table
@@ -19,9 +21,10 @@
     </div>
   </div>
 
-  <create-product v-if="openCreateProductModal" @close="openCreateProductModal = false" @refresh="fetchProducts" />
-  <edit-product v-if="openEditProductModal" :id="product_id" @close="openEditProductModal = false" @refresh="fetchProducts" />
-  <delete-product v-if="openDeleteModal" :id="product_id" @close="openDeleteModal = false" @refresh="fetchProducts" />
+  <create-product v-if="openCreateProductModal" @close="openCreateProductModal = false" @refresh="fetchProducts"/>
+  <edit-product v-if="openEditProductModal" :id="product_id" @close="openEditProductModal = false"
+                @refresh="fetchProducts"/>
+  <delete-product v-if="openDeleteModal" :id="product_id" @close="openDeleteModal = false" @refresh="fetchProducts"/>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +34,7 @@ import CreateProduct from "~/components/admin/products/CreateProduct.vue";
 import EditProduct from "~/components/admin/products/EditProduct.vue";
 import DeleteProduct from "~/components/admin/products/DeleteProduct.vue";
 import Toolbar from "~/components/admin/Toolbar.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue"
 import {keepPreviousData, useQuery} from "@tanstack/vue-query";
 import {getAllProducts} from "~/services/admin/ProductService";
 

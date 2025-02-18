@@ -1,7 +1,9 @@
 <template>
   <div class="card">
     <toolbar @open-modal="showCreateModal"/>
-    <div v-if="isLoading">Loading...</div>
+    <div v-if="isPending">
+      <LoadingSpinner />
+    </div>
     <div v-else-if="error">Error: {{ error?.message }}</div>
     <div v-else>
       <categories-table :data="data?.categories" title="Brands"
@@ -20,11 +22,12 @@
 <script setup lang="ts">
 import Toolbar from "~/components/admin/Toolbar.vue";
 import CategoriesTable from "~/components/admin/categories/CategoriesTable.vue";
-import {useQuery} from "@tanstack/vue-query";
-import {getAllCategories} from "~/services/admin/CategoryService.ts";
+import {useQuery, keepPreviousData} from "@tanstack/vue-query";
+import {getAllCategories} from "~/services/admin/CategoryService";
 import CreateCategory from "~/components/admin/categories/CreateCategory.vue";
 import EditCategory from "~/components/admin/categories/EditCategory.vue";
 import DeleteCategory from "~/components/admin/categories/DeleteCategory.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 
 definePageMeta({
   layout: 'admin-layout',
@@ -41,10 +44,10 @@ const fetchCategories = async () => {
   return response.data
 }
 
-const { data, error, isLoading } = useQuery({
+const { data, error, isPending } = useQuery({
   queryKey: ['categories'],
   queryFn: () => fetchCategories(),
-  keepPreviousData: true,
+  placeholderData: keepPreviousData,
 })
 
 const showCreateModal = () => {
