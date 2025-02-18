@@ -135,7 +135,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/vue-query';
 import BaseModal from "~/components/admin/BaseModal.vue";
 import { InputText, Textarea, InputNumber, FileUpload, Select } from "primevue";
 import Editor from 'primevue/editor';
@@ -191,13 +191,13 @@ const fetchCategories = async () => {
 const { data: brands } = useQuery({
   queryKey: ["brands"],
   queryFn: fetchBrands,
-  keepPreviousData: true,
+  placeholderData: keepPreviousData,
 });
 
 const { data: categories } = useQuery({
   queryKey: ["categories"],
   queryFn: fetchCategories,
-  keepPreviousData: true,
+  placeholderData: keepPreviousData,
 });
 
 // Local wrapper for field validation that uses the global function

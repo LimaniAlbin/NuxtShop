@@ -5,23 +5,33 @@ const Brand = require('../models/Brand');
 const Category = require('../models/Category');
 const slugify = require('slugify');
 
-
+/**
+ * Returns all products
+ */
 const getProducts = async (req, res) => {
     const { page = 1, limit = 8 } = req.query;
     const skip = (page - 1) * limit;
+    const lowStockThreshold = 5; // Global low stock threshold
 
     try {
         const products = await Product.find()
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(Number(limit))
-            .populate(['brand', 'category']);
+            .populate(['brand', 'category'])
+            .lean();
+
+        // Add a computed field for low stock alert on each product
+        const productsWithAlert = products.map(product => ({
+            ...product,
+            lowStockAlert: product.stock < lowStockThreshold
+        }));
 
         const totalProducts = await Product.countDocuments();
 
         res.status(200).json({
             message: 'Product list fetched successfully',
-            products,
+            products: productsWithAlert,
             total: totalProducts,
             totalPages: Math.ceil(totalProducts / limit),
             currentPage: Number(page)
@@ -31,6 +41,9 @@ const getProducts = async (req, res) => {
     }
 };
 
+/**
+ * Returns a single product based on its id
+ */
 const getProductById = async (req, res) => {
     const { id } = req.params;
 
@@ -47,6 +60,9 @@ const getProductById = async (req, res) => {
     }
 };
 
+/**
+ * Creates a new product
+ */
 const createProduct = async (req, res) => {
     const { name, description, shortDescription, price, stock, brand, category } = req.body;
     const image = req.file ? req.file.filename : null;
@@ -83,6 +99,9 @@ const createProduct = async (req, res) => {
     }
 };
 
+/**
+ * Edits a product after finding it using its id
+ */
 const editProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, shortDescription, price, stock, brand, category } = req.body;
@@ -137,6 +156,9 @@ const editProduct = async (req, res) => {
     }
 };
 
+/**
+ * Deletes a product after finding it using its id
+ */
 const deleteProduct = async (req, res) => {
     const { id } = req.params;
 

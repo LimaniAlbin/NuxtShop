@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <toolbar @open-modal="showCreateModal"/>
-    <div v-if="isLoading">Loading...</div>
+    <div v-if="isPending">Loading...</div>
     <div v-else-if="error">Error: {{ error?.message }}</div>
     <div v-else>
       <products-table
@@ -31,8 +31,8 @@ import CreateProduct from "~/components/admin/products/CreateProduct.vue";
 import EditProduct from "~/components/admin/products/EditProduct.vue";
 import DeleteProduct from "~/components/admin/products/DeleteProduct.vue";
 import Toolbar from "~/components/admin/Toolbar.vue";
-import {useQuery} from "@tanstack/vue-query";
-import {getAllProducts} from "~/services/admin/ProductService.ts";
+import {keepPreviousData, useQuery} from "@tanstack/vue-query";
+import {getAllProducts} from "~/services/admin/ProductService";
 
 // Page meta
 definePageMeta({
@@ -74,9 +74,9 @@ const showDeleteModal = (id: string) => {
 }
 
 // tanstack query
-const {data, error, isLoading} = useQuery({
+const {data, error, isPending} = useQuery({
   queryKey: ["products", currentPage, pageSize],
   queryFn: () => fetchProducts(currentPage.value, pageSize.value),
-  keepPreviousData: true,
+  placeholderData: keepPreviousData
 });
 </script>

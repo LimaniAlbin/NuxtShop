@@ -6,7 +6,7 @@
     <Column header="Image">
       <template #body="slotProps">
         <img :src="`${runtimeConfig.public.backendUrl}/uploads/${slotProps?.data?.image}`" :alt="title + 'Image'"
-             class="w-18 h-14 rounded"/>
+             class="rounded" style="width: 64px"/>
       </template>
     </Column>
     <Column field="name" header="Name"></Column>
@@ -21,8 +21,16 @@
         {{ slotProps?.data?.category?.name }}
       </template>
     </Column>
-    <Column field="price" header="Price"></Column>
-    <Column field="stock" header="Stock"></Column>
+    <Column header="Price">
+      <template #body="slotProps">
+        {{ formatCurrency(slotProps?.data?.price) }}
+      </template>
+    </Column>
+    <Column field="inventoryStatus" header="Status">
+      <template #body="slotProps">
+        <Tag :value="slotProps.data.stockStatus" :severity="setStatusColor(slotProps.data.stockStatus)" />
+      </template>
+    </Column>
     <Column :exportable="false" style="width: 10rem">
       <template #body="slotProps">
         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click.prevent="openEditModal(slotProps.data._id)"/>
@@ -44,6 +52,7 @@ import TableHeader from "~/components/admin/TableHeader.vue";
 import Paginator from 'primevue/paginator';
 
 const runtimeConfig = useRuntimeConfig();
+const { formatCurrency } = useCurrencyFormatter()
 
 const props = defineProps({
   data: {
@@ -76,8 +85,6 @@ const props = defineProps({
   }
 })
 
-console.log(props.data)
-
 const emit = defineEmits<{
   (e: 'paginate', page: number, pageSize: number): void;
   (e: 'open-edit', id: string): void;
@@ -85,12 +92,25 @@ const emit = defineEmits<{
 }>();
 
 const selectedPage = ref(1)
-const selectedPageSize = ref(8)
+const selectedPageSize = ref(props.pageSize)
 
 const onPageChange = (event: any) => {
   selectedPage.value = event?.page + 1;
   selectedPageSize.value = event?.rows;
   emit('paginate', selectedPage.value, selectedPageSize.value)
+}
+
+const setStatusColor = (status: string) => {
+  switch (status) {
+    case 'In Stock':
+      return 'success'
+    case 'Low Stock':
+      return 'warn'
+    case 'Out of Stock':
+      return 'danger'
+    default:
+      return undefined
+  }
 }
 
 const openEditModal = (id: string) => {
@@ -100,5 +120,7 @@ const openEditModal = (id: string) => {
 const openDeleteModal = (id: string) => {
   emit('open-delete', id)
 }
+
+console.log(props.data)
 
 </script>
